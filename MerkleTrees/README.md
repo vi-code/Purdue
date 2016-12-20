@@ -5,7 +5,9 @@ The hash functions and client/server class are in a separate package.
 The project runs through process.java
 
 
-usage: java merkle.Process [options]
+usage: 
+
+java merkle.Process [options]
 -i is a required option
 	-i <path to input file>
 	-hf <hash function> [default md5]
@@ -17,7 +19,6 @@ usage: java merkle.Process [options]
 		for verbose output
 	-h or --help
 		help
-
 	-o <path to output file> [default inputFile.spoof]
 	-t <task> [default generate]
 		generate to generate a merkle tree
