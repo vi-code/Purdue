@@ -4,7 +4,7 @@
 import java.util.*;
 
 public class SearchTree {
-	
+
 	private Node root; //The root of the RB Tree
 	private JobTable jobs; //The jobTable
 	//The following variables are used for measuring utilities, do not change them!
@@ -16,7 +16,6 @@ public class SearchTree {
 	RedBlackBST b;
 	private Node w = null;
 	private List<Node> best;
-
 	//You can add any other variables here if needed
 
 	//Create a balanced search tree consisting of all the machines initially empty
@@ -31,19 +30,18 @@ public class SearchTree {
 			insertNewNode(i, space, 0);
 			machineLoads[i] = 0;
 		}
-
 	}
 
 	public SearchTree(JobTable jt) {
 		jobs = jt;
 	}
-	
+
 	public void insertNewNode(int machine, int free, int numjobs){
 		root = RedBlackBST.insert(root, new Node(machine,free, numjobs));
 	}
 
 	//TODO: All parts needed for you implementation are in functions listed below:
-	
+
 	//Find the machine with just enough free space to schedule a job
 	//Update the free size and number of jobs on the machine
 	//Return machine id... -1 if no such machine exists
@@ -52,7 +50,7 @@ public class SearchTree {
 		requests++;
 		/* Do not modify the code above */
 		/* TODO: Start your implementation here, find m to schedule */
-		System.out.println("Scheduling...  " + jobid);
+
 		if(!(count(size) == 0))
 		{
 			Node r = root;
@@ -80,9 +78,8 @@ public class SearchTree {
 					//Node assignedMachine = jobs.jobMachine(jobid);
 					Node tbInsert = copyNode(r);
 					root = RedBlackBST.delete(root, r); //deleting the node
-					//tbInsert.free -= size;
-					//tbInsert.numjobs++;
-					tbInsert.addJob(size);
+					tbInsert.free -= size;
+					tbInsert.numjobs++;
 					root = RedBlackBST.insert(root, tbInsert); // inserting the updating node
 
 					jobs.addJob(jobid, size, tbInsert);
@@ -120,52 +117,48 @@ public class SearchTree {
 			m = list.get(differences.indexOf(min));
 			Node tbInsert = copyNode(m);
 			root = RedBlackBST.delete(root,m); //deleting the node
-			tbInsert.addJob(size);
-			//tbInsert.free -= size;
-			//tbInsert.numjobs++;
+//			tbInsert.addJob(jobs.jobSize(jobid));
+			tbInsert.free -= size;
+			tbInsert.numjobs++;
 			root = RedBlackBST.insert(root, tbInsert); // inserting the updating node
 			jobs.addJob(jobid, size, tbInsert);
 			m = copyNode(tbInsert);
 		}
 		else
 			return -1;
-		//printTree(root);
-		System.out.println("Success! Scheduled to " + m.id);
+
 		/* Do not modify the following part */
 		scheduled++;
 		machineLoads[m.id] ++;
 		return m.id;
 
 	}
-	
-	
+
+
 	//Find the machine with enough free space and minimum number of jobs to schedule a job
 	//Update the free size and number of jobs on the machine
 	//Return machine id... -1 if no such machine exists
 	public int scheduleJobMinJob(int jobid, int size) {
-		
+
 		Node m;
 		requests++;
 		/* TODO: Start your implementation here: Find node m to schedule the job  */
-		System.out.println("Scheduling...  " + jobid);
 
-		m = root;
 		Node bestOption = null;
-		printTree(root);
-		m = scheduleJobMinJob_iterative(size);
+		m = root;
+		m = scheduleJobMinJob(m, size, bestOption);
 		if(m == null)
 			return -1;
 
-		Node tbInsert = m;
-		root = RedBlackBST.delete(root,m); //deleting the node
+		Node tbInsert = copyNode(m);
+		root = RedBlackBST.delete(root, m); //deleting the node
 		tbInsert.free -= size;
 		tbInsert.numjobs++;
 		root = RedBlackBST.insert(root, tbInsert); // inserting the updating node
 		jobs.addJob(jobid, size, tbInsert);
 		m = copyNode(tbInsert);
-		//printTree(root);
 
-		System.out.println("Success! Scheduled to " + m.id);
+
 
 		/* Do not modify the following part */
 		machineLoads[m.id] ++;
@@ -173,54 +166,62 @@ public class SearchTree {
 		return m.id;
 		//return -1; //TO DELETE
 	}
-	
-		public Node scheduleJobMinJob_iterative(int size){
-		Node temp = root;
 
-		while (temp.right != null && temp.left != null) {
-			if (temp.free < size) {
-				temp = temp.right;
-			} else {
-				//Node p = null;
+	public Node scheduleJobMinJob(Node u, int size, Node bestOption)
+	{
+		if (u == null)
+			return bestOption;
 
-				while (temp.left != null && temp.left.free > size && temp.numjobs <= temp.left.numjobs) {
-					temp = temp.left;
-					//p = temp;
+		else if(u.free <= size)
+		{
+			if(u.right == null) {
+//				best.add(bestOption);
+				return bestOption;
+			}
+			u = u.right;
+			return scheduleJobMinJob(u, size, bestOption);
+
+		}
+		//else if(u.free > size)
+		else
+		{
+			if(u.right == null)
+				w = u;
+			else
+			{
+				if (u.numjobs < u.right.minJobsNode.numjobs)
+				{
+					w = u;
+				} else if(u.numjobs > u.right.minJobsNode.numjobs)
+				{
+					w = u.right.minJobsNode;
 				}
-
-				if (temp.right == null) {
-					return temp;
-				} else {
-					if (temp.numjobs < temp.right.minJobsNode.numjobs) {
-						return temp;
-					} else if (temp.numjobs > temp.right.minJobsNode.numjobs) {
-						return temp.right.minJobsNode;
-					} else {
-						if (temp.free < temp.right.minJobsNode.free) {
-							return temp;
-						} else if (temp.free > temp.right.minJobsNode.free) {
-							return temp.right.minJobsNode;
-						} else {
-							if (temp.id < temp.right.minJobsNode.id) {
-								return temp;
-							} else {
-								return temp.right.minJobsNode;
-							}
-						}
+				else
+				{
+					if(u.free < u.right.minJobsNode.free)
+						w = u;
+					else if(u.free > u.right.minJobsNode.free)
+						w = u.right.minJobsNode;
+					else
+					{
+						if(u.id <= u.right.minJobsNode.id)
+							w = u;
+						else
+							w = u.right.minJobsNode;
 					}
 				}
-
 			}
-		}
 
-		if (temp.free <= size) {
-			return temp;
-		} else {
-			return temp;
+			if (bestOption == null || w.numjobs <= bestOption.numjobs)
+			{
+				bestOption = w;
+			}
+
+			u = u.left;
+			return scheduleJobMinJob(u, size, bestOption);
 		}
 	}
 
-	
 	//Update the free space and number of jobs on machine releasing a job
 	public void releaseJob(int jobid) {
 
@@ -232,16 +233,15 @@ public class SearchTree {
 		//Search for m in tree
 		Node tbInsert = copyNode(m);
 		root = RedBlackBST.delete(root, m);
- 		//m.removeJob(jobs.jobSize(jobid));
+		//m.removeJob(jobs.jobSize(jobid));
 		tbInsert.free += jobs.jobSize(jobid);
-	    tbInsert.numjobs--;
+		tbInsert.numjobs--;
 		root = RedBlackBST.insert(root, tbInsert);
 		jobs.deleteJob(jobid, tbInsert); //delete job from hashtable
-		m = tbInsert;
 
 		machineLoads[m.id]--;
 	}
-	
+
 	//Return the number of machines that have atleast given free space
 	public int count(int free){
 		
@@ -253,7 +253,7 @@ public class SearchTree {
 	}
 
 	//Helper function that takes node and free as parameters (Function overloading lol)
-	public int count(int free, Node node) { //I hope this works, this literally is from the lecture slides
+	public int count(int free, Node node) {
 		if(node == null)
 			return 0;
 
@@ -268,7 +268,7 @@ public class SearchTree {
 			return count(free, node.right);
 
 	}
-	
+
 	/*
 	* DO NOT EDIT THE FOLLOWING FUNCTION
 	* IT IS INVOLVED IN MEASURING THE UTILITIES FOR EXPERIMENTAL SECTION
@@ -318,7 +318,7 @@ public class SearchTree {
 		if(root!=null)
 		{
 			printTree(root.left);
-			System.out.print(root.id + " ");
+			System.out.print(root.free + " ");
 			printTree(root.right);
 		}
 	}
