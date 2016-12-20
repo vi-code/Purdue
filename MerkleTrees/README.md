@@ -5,7 +5,7 @@ The hash functions and client/server class are in a separate package.
 The project runs through process.java
 
 
-usage: 
+### Usage: 
 
 java merkle.Process [options]
 
