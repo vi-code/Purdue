@@ -1,4 +1,4 @@
-package project_3_skeleton.merkle.hash;
+package merkle.hash;
 
 import merkle.implementation.MerkleTree;
 
