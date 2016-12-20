@@ -5,6 +5,7 @@ Two strategies used:
 * Min-Job
 * Min-Space
 
+### Usage:
 
 1. Running TestTree.java
 
