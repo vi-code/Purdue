@@ -1,4 +1,4 @@
-package project_3_skeleton.merkle.implementation;
+package merkle.implementation;
 
 import merkle.Configuration;
 import merkle.ICollisionGenerator;

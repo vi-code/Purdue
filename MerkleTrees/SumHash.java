@@ -1,14 +1,15 @@
-package project_3_skeleton.merkle.implementation;
+package merkle.implementation;
 
-import project_3_skeleton.merkle.hash.HashFunction;
+import merkle.hash.HashFunction;
 
 /**
  * TASK 3
  * TODO: IMPLEMENT hash
  *
- * @author TODO
- * @pso TODO
- * @date TODO
+ * @author Vihar Patel
+ * @pso P17
+ * @ID patel486
+ * @date 10/25/2016
  */
 public class SumHash implements HashFunction {
 
@@ -22,6 +23,11 @@ public class SumHash implements HashFunction {
     public String hashBlock(String input) throws Exception {
         int hash = 0;
         //TODO:implement
+        byte[] b = input.getBytes();
+        for(int i = 0; i < b.length; i++)
+        {
+            hash += b[i];
+        }
         return String.valueOf(hash);
     }
 

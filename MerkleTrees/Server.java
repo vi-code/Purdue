@@ -1,7 +1,7 @@
-package project_3_skeleton.merkle.implementation;
+package merkle.implementation;
 
 import merkle.IMerkleTree;
-import project_3_skeleton.merkle.IServer;
+import merkle.IServer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -11,9 +11,10 @@ import java.util.List;
  * TASK 2
  * TODO: IMPLEMENT generateResponse
  *
- * @author TODO
- * @pso TODO
- * @date TODO
+ * @author Vihar Patel
+ * @pso P17
+ * @ID patel486
+ * @date 10/25/2016
  */
 public class Server extends IServer {
 
@@ -26,6 +27,24 @@ public class Server extends IServer {
     public List<IMerkleTree.Node> generateResponse(int blockToTest) {
         List<IMerkleTree.Node> verificationList = new LinkedList<>();
         //TODO:implement
+
+        verificationList.add(merkleTree.getNode(blockToTest));
+        IMerkleTree.Node[] tree = merkleTree.getTree();
+
+        for(int i = blockToTest; i > 1; i /= 2)
+        {
+
+            if ((i % 2) == 0)
+            {
+                if((tree.length != i)) {
+                    verificationList.add(merkleTree.getNode(i + 1));
+                }
+            }
+            else {
+                    verificationList.add(merkleTree.getNode(i - 1));
+            }
+        }
+
         return verificationList;
     }
 }
