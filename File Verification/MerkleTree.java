@@ -9,8 +9,6 @@ import static merkle.Configuration.blockSize;
 import static merkle.Configuration.hashFunction;
 
 /**
- * TASK 1
- * TODO: IMPLEMENT build
  *
  * @author Vihar Patel
  * @id patel486@purdue.edu
