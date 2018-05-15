@@ -8,16 +8,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
-/**
- * TASK 4 BONUS
- * THIS IS FOR BONUS POINTS
- * DO NOT DO THIS BEFORE COMPLETING EVERYTHING ELSE FIRST
- * TODO: IMPLEMENT generateCollision
- *
- * @author TODO
- * @pso TODO
- * @date TODO
- */
+
 
 public class CollisionGenerator extends ICollisionGenerator {
 
